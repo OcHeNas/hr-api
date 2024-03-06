@@ -5,6 +5,8 @@ from sqlalchemy import Table, Column, Integer, String, TIMESTAMP, ForeignKey, JS
 
 from database import Base
 
+from src.department.models import department, order
+
 metadata = MetaData()
 
 role = Table(
@@ -15,34 +17,6 @@ role = Table(
     Column("permissions", JSON),
 )
 
-department = Table(
-    "department",
-    metadata,
-    Column("id_department", Integer, primary_key=True),
-    Column("Name", VARCHAR(50), nullable=False),
-    Column("Description", TEXT, nullable=False),
-    Column("id_director", Integer, nullable=False),
-)
-
-post = Table(
-    "post",
-    metadata,
-    Column("id_post", Integer, primary_key=True),
-    Column("Members", Integer, nullable=False),
-    Column("Salary", Integer, nullable=False),
-    Column("Name", VARCHAR(100), nullable=False),
-    Column("department_id", Integer, ForeignKey("department.id_department")),
-)
-
-order = Table(
-    "order",
-    metadata,
-    Column("id_order", Integer, primary_key=True),
-    Column("Type",VARCHAR(100), nullable=False),
-    Column("Date", Date, nullable=False),
-    Column("staff_id", Integer, nullable=False),
-    Column("post_id", Integer, ForeignKey("post.id_post")),
-)
 
 user = Table(
     "user",
@@ -55,38 +29,14 @@ user = Table(
     Column("INN", VARCHAR(12), nullable=False),
     Column("Birthday", Date, nullable=False),
     Column("Gender", VARCHAR(50), nullable=False),
-    Column("order_id", Integer, ForeignKey("order.id_order")),
+    Column("order_id", Integer, ForeignKey(order.c.id_order)),
     Column("role_id", Integer, ForeignKey(role.c.id)),
-    Column("department", Integer, ForeignKey("department.id_department")),
+    Column("department", Integer, ForeignKey(department.c.id_department)),
     Column("email", VARCHAR(50), nullable=False),
     Column("registered_at", TIMESTAMP, default=datetime.utcnow),
     Column("is_active", Boolean, default=True, nullable=False),
     Column("is_superuser", Boolean, default=False, nullable=False),
     Column("is_verified", Boolean, default=False, nullable=False),
-)
-
-appilicant = Table(
-    "appilicant",
-    metadata,
-    Column("id_appilicant", Integer, primary_key=True),
-    Column("FIO", VARCHAR(50), nullable=False),
-    Column("Passport", TEXT, nullable=False),
-    Column("INN", VARCHAR(12), nullable=False),
-    Column("Birthday", Date, nullable=False),
-    Column("Gender", VARCHAR(50), nullable=False),
-    Column("Address", VARCHAR(100), nullable=False),
-    Column("Resume", TEXT, nullable=False),
-    Column("email", VARCHAR(50), nullable=False),
-)
-
-vacancy = Table(
-    "vacancy",
-    metadata,
-    Column("id_vacancy", Integer, primary_key=True),
-    Column("department_id", Integer, nullable=False),
-    Column("Post", VARCHAR(50), nullable=False),
-    Column("Description", TEXT, nullable=False),
-    Column("appilicant_id", Integer, ForeignKey("appilicant.id_appilicant")),
 )
 
 class User(SQLAlchemyBaseUserTable[int], Base):
