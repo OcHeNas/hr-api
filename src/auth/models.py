@@ -4,8 +4,7 @@ from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 from sqlalchemy import Table, Column, Integer, String, TIMESTAMP, ForeignKey, JSON, Boolean, MetaData, VARCHAR, TEXT, Date
 
 from database import Base
-
-from src.department.models import department, order
+from src.department.models import department, order, post
 
 metadata = MetaData()
 
@@ -16,7 +15,6 @@ role = Table(
     Column("name", VARCHAR(50), nullable=False),
     Column("permissions", JSON),
 )
-
 
 user = Table(
     "user",

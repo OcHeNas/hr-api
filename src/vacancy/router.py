@@ -14,8 +14,8 @@ router1 = APIRouter(
 )
 
 @router1.get("/")
-async def get_specific_vacancy(Description: str, session: AsyncSession = Depends(get_async_session)):
-    query = select(vacancy).where(vacancy.c.Description == Description)
+async def get_specific_vacancy(Description: str = '', session: AsyncSession = Depends(get_async_session)):
+    query = select(vacancy).where((Description) in vacancy.c.Description)
     result = await session.execute(query)
     return result.all()
 
@@ -32,14 +32,30 @@ async def delete_specific_vacancy(Description: str, session: AsyncSession = Depe
     result = await session.execute(query)
     return result.all()
 
+@router1.put("/")
+async def update_specific_vacancy(Description: str, new_vacacy: vacancyCreate, session: AsyncSession = Depends(get_async_session)):
+    query = select(vacancy).where(vacancy.c.Description == Description)
+    existing_vacancy = (await session.execute(query)).scalar_one_or_none()
+    if existing_vacancy:
+        stmt = (
+            update(vacancy)
+            .where(vacancy.c.Description == Description)
+            .values(**new_vacacy.dict())
+        )
+        await session.execute(stmt)
+        await session.commit()
+        return {"status": "success", "message": f"vacancy with description '{Description}' updated successfully"}
+    else:
+        return {"status": "error", "message": f"vacancy with description '{Description}' not found"}
+
 router2 = APIRouter(
     prefix="/appilicant",
     tags=["appilicant"]
 )
 
 @router2.get("/")
-async def get_specific_appilicant(email: str, session: AsyncSession = Depends(get_async_session)):
-    query = select(appilicant).where(appilicant.c.email == email)
+async def get_specific_appilicant(email: str = '', session: AsyncSession = Depends(get_async_session)):
+    query = select(appilicant).where((email) in appilicant.c.email)
     result = await session.execute(query)
     return result.all()
 
@@ -55,3 +71,19 @@ async def delete_specific_appilicant(email: str, session: AsyncSession = Depends
     stmt = delete(appilicant).where(appilicant.c.email == email)
     result = await session.execute(query)
     return result.all()
+
+@router2.put("/")
+async def update_specific_appilicant(email: str, new_appilicant: appilicantCreate, session: AsyncSession = Depends(get_async_session)):
+    query = select(appilicant).where(appilicant.c.email == email)
+    existing_appilicant = (await session.execute(query)).scalar_one_or_none()
+    if existing_appilicant:
+        stmt = (
+            update(appilicant)
+            .where(appilicant.c.email == email)
+            .values(**new_appilicant.dict())
+        )
+        await session.execute(stmt)
+        await session.commit()
+        return {"status": "success", "message": f"appilicant with email '{email}' updated successfully"}
+    else:
+        return {"status": "error", "message": f"appilicant with email '{email}' not found"}
