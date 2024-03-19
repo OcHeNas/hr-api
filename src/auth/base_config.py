@@ -1,6 +1,7 @@
 from fastapi_users import FastAPIUsers
 from fastapi_users.authentication import CookieTransport, AuthenticationBackend
 from fastapi_users.authentication import JWTStrategy
+from fastapi import Depends
 
 from src.auth.manager import get_user_manager
 from src.auth.models import User
@@ -24,3 +25,10 @@ fastapi_users = FastAPIUsers[User, int](
 )
 
 current_user = fastapi_users.current_user()
+
+def check_user_role(required_roles: list):
+    def check_role(user: User = Depends(fastapi_users.current_user())):
+        if user.role_name not in required_roles:
+            raise HTTPException(status_code=403, detail="User does not have enough privileges")
+        return user
+    return check_role

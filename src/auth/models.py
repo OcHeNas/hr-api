@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
-from sqlalchemy import Table, Column, Integer, String, TIMESTAMP, ForeignKey, JSON, Boolean, MetaData, VARCHAR, TEXT, Date
+from sqlalchemy import Table, Column, Integer, String, TIMESTAMP, ForeignKey, JSON, Boolean, MetaData, VARCHAR, TEXT, Date, insert
 
 from database import Base
 from src.department.models import department, order, post
@@ -29,6 +29,7 @@ user = Table(
     Column("Gender", VARCHAR(50), nullable=False),
     Column("order_id", Integer, ForeignKey(order.c.id_order)),
     Column("role_id", Integer, ForeignKey(role.c.id)),
+    Column("role_name", VARCHAR(50), nullable=False),
     Column("department", Integer, ForeignKey(department.c.id_department)),
     Column("email", VARCHAR(50), nullable=False),
     Column("registered_at", TIMESTAMP, default=datetime.utcnow),
@@ -50,6 +51,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     username = Column(VARCHAR(10), nullable=False)
     registered_at = Column(TIMESTAMP, default=datetime.utcnow)
     role_id = Column(Integer, ForeignKey(role.c.id))
+    role_name = Column(VARCHAR(50), nullable=False)
     hashed_password: Column(VARCHAR(10), nullable=False)
     is_active: bool = Column(Boolean, default=True, nullable=False)
     is_superuser: bool = Column(Boolean, default=False, nullable=False)
