@@ -5,7 +5,7 @@ metadata = MetaData()
 department = Table(
     "department",
     metadata,
-    Column("id_department", Integer, primary_key=True),
+    Column("id_department", Integer, primary_key=True, autoincrement=True),
     Column("Name", VARCHAR(50), nullable=False),
     Column("Description", TEXT, nullable=False),
     Column("id_director", Integer, nullable=False),
@@ -14,7 +14,7 @@ department = Table(
 post = Table(
     "post",
     metadata,
-    Column("id_post", Integer, primary_key=True),
+    Column("id_post", Integer, primary_key=True, autoincrement=True),
     Column("Members", Integer, nullable=False),
     Column("Salary", Integer, nullable=False),
     Column("Name", VARCHAR(100), nullable=False),
@@ -24,7 +24,7 @@ post = Table(
 order = Table(
     "order",
     metadata,
-    Column("id_order", Integer, primary_key=True),
+    Column("id_order", Integer, primary_key=True, autoincrement=True),
     Column("Type",VARCHAR(100), nullable=False),
     Column("Date", Date, nullable=False),
     Column("staff_id", Integer, nullable=False),

@@ -19,7 +19,7 @@ role = Table(
 user = Table(
     "user",
     metadata,
-    Column("id_satff", Integer, primary_key=True),
+    Column("id_satff", Integer, primary_key=True, autoincrement=True),
     Column("FIO", VARCHAR(50), nullable=False),
     Column("username", VARCHAR(10), nullable=False),
     Column("hashed_password", VARCHAR(10), nullable=False),
@@ -38,7 +38,7 @@ user = Table(
 )
 
 class User(SQLAlchemyBaseUserTable[int], Base):
-    id_staff = Column(Integer, primary_key=True)
+    id_staff = Column(Integer, primary_key=True, autoincrement=True)
     email = Column(VARCHAR(50), nullable=False)
     FIO = Column(VARCHAR(50), nullable=False)
     Passport = Column(TEXT, nullable=False)
