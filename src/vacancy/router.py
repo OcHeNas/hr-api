@@ -1,14 +1,14 @@
 from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy import select, insert, delete
+from sqlalchemy import select, insert, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.auth.models import User
 from  src.auth.base_config import current_user, fastapi_users
 
 from src.database import get_async_session
 from src.vacancy.models import vacancy
-from src.vacancy.models import appilicant
+from src.vacancy.models import applicant
 from src.vacancy.schemas import vacancyCreate
-from src.vacancy.schemas import appilicantCreate
+from src.vacancy.schemas import applicantCreate
 from src.auth.base_config import check_user_role
 
 router1 = APIRouter(
@@ -48,42 +48,42 @@ async def delete_specific_vacancy(id_vacancy: int, session: AsyncSession = Depen
 @router1.put("/"
     #, dependencies=[Depends(check_user_role(["Admin", "Employer"]))]
              )
-async def update_specific_vacancy(Description: str, new_vacacy: vacancyCreate, session: AsyncSession = Depends(get_async_session)):
-    query = select(vacancy).where(vacancy.c.Description == Description)
+async def update_specific_vacancy(id_vacancy: int, new_vacacy: vacancyCreate, session: AsyncSession = Depends(get_async_session)):
+    query = select(vacancy).where(vacancy.c.id_vacancy == id_vacancy)
     existing_vacancy = (await session.execute(query)).scalar_one_or_none()
     if existing_vacancy:
         stmt = (
             update(vacancy)
-            .where(vacancy.c.Description == Description)
+            .where(vacancy.c.id_vacancy == id_vacancy)
             .values(**new_vacacy.dict())
         )
         await session.execute(stmt)
         await session.commit()
-        return {"status": "success", "message": f"vacancy with description '{Description}' updated successfully"}
+        return {"status": "success", "message": f"vacancy with description '{id_vacancy}' updated successfully"}
     else:
-        return {"status": "error", "message": f"vacancy with description '{Description}' not found"}
+        return {"status": "error", "message": f"vacancy with description '{id_vacancy}' not found"}
 
 router2 = APIRouter(
-    prefix="/appilicant",
-    tags=["appilicant"]
+    prefix="/applicant",
+    tags=["applicant"]
 )
 
 @router2.get("/"
     #, dependencies=[Depends(check_user_role(["Admin", "Employer"]))]
              )
-async def get_specific_appilicant(id_appilicant: int = None, session: AsyncSession = Depends(get_async_session)):
-    if id_appilicant:
-        query = select(appilicant).where(appilicant.c.id_appilicant == id_appilicant)
+async def get_specific_applicant(id_applicant: int = None, session: AsyncSession = Depends(get_async_session)):
+    if id_applicant:
+        query = select(applicant).where(applicant.c.id_applicant == id_applicant)
     else:
-        query = select(appilicant)
+        query = select(applicant)
     result = await session.execute(query)
     return result.mappings().all()
 
 @router2.post("/"
     #, dependencies=[Depends(check_user_role(["Admin", "Employer", "User"]))]
               )
-async def add_specific_appilicant(new_appilicant: appilicantCreate, session: AsyncSession = Depends(get_async_session)):
-    stmt = insert(appilicant).values(**new_appilicant.dict())
+async def add_specific_applicant(new_applicant: applicantCreate, session: AsyncSession = Depends(get_async_session)):
+    stmt = insert(applicant).values(**new_applicant.dict())
     await session.execute(stmt)
     await session.commit()
     return {"status": "success"}
@@ -91,8 +91,8 @@ async def add_specific_appilicant(new_appilicant: appilicantCreate, session: Asy
 @router2.delete("/"
     #, dependencies=[Depends(check_user_role(["Admin", "Employer"]))]
                 )
-async def delete_specific_appilicant(id_appilicant: int, session: AsyncSession = Depends(get_async_session)):
-    stmt = delete(appilicant).where(appilicant.c.id_appilicant == id_appilicant)
+async def delete_specific_applicant(id_applicant: int, session: AsyncSession = Depends(get_async_session)):
+    stmt = delete(applicant).where(applicant.c.id_applicant == id_applicant)
     await session.execute(stmt)
     await session.commit()
     return {"status": "success"}
@@ -100,17 +100,17 @@ async def delete_specific_appilicant(id_appilicant: int, session: AsyncSession =
 @router2.put("/"
     #, dependencies=[Depends(check_user_role(["Admin", "Employer"]))]
              )
-async def update_specific_appilicant(email: str, new_appilicant: appilicantCreate, session: AsyncSession = Depends(get_async_session)):
-    query = select(appilicant).where(appilicant.c.email == email)
-    existing_appilicant = (await session.execute(query)).scalar_one_or_none()
-    if existing_appilicant:
+async def update_specific_applicant(id_applicant: int, new_appilicant: applicantCreate, session: AsyncSession = Depends(get_async_session)):
+    query = select(applicant).where(applicant.c.id_applicant == id_applicant)
+    existing_applicant = (await session.execute(query)).scalar_one_or_none()
+    if existing_applicant:
         stmt = (
-            update(appilicant)
-            .where(appilicant.c.email == email)
+            update(applicant)
+            .where(applicant.c.id_applicant == id_applicant)
             .values(**new_appilicant.dict())
         )
         await session.execute(stmt)
         await session.commit()
-        return {"status": "success", "message": f"appilicant with email '{email}' updated successfully"}
+        return {"status": "success", "message": f"applicant with email '{id_applicant}' updated successfully"}
     else:
-        return {"status": "error", "message": f"appilicant with email '{email}' not found"}
+        return {"status": "error", "message": f"applicant with email '{id_applicant}' not found"}

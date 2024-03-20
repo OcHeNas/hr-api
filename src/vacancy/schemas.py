@@ -7,7 +7,7 @@ class vacancyCreate(BaseModel):
     Post: str
     Description: str
 
-class appilicantCreate(BaseModel):
+class applicantCreate(BaseModel):
     FIO: str
     Passport: str
     INN: str

@@ -1,5 +1,5 @@
 from sqlalchemy import Table, Column, Integer, TEXT, VARCHAR, MetaData, ForeignKey, Date
-
+from sqlalchemy.orm import relationship
 metadata = MetaData()
 
 department = Table(
@@ -18,7 +18,7 @@ post = Table(
     Column("Members", Integer, nullable=False),
     Column("Salary", Integer, nullable=False),
     Column("Name", VARCHAR(100), nullable=False),
-    Column("department_id", Integer, ForeignKey(department.c.id_department)),
+    Column("department_id", Integer, ForeignKey(department.c.id_department, ondelete="CASCADE")),
 )
 
 order = Table(
@@ -28,5 +28,5 @@ order = Table(
     Column("Type",VARCHAR(100), nullable=False),
     Column("Date", Date, nullable=False),
     Column("staff_id", Integer, nullable=False),
-    Column("post_id", Integer, ForeignKey(post.c.id_post)),
+    Column("post_id", Integer, ForeignKey(post.c.id_post, ondelete="CASCADE")),
 )
