@@ -16,26 +16,38 @@ router1 = APIRouter(
     tags=["vacancy"]
 )
 
-@router1.get("/", dependencies=[Depends(check_user_role(["Admin", "Employer", "User"]))])
-async def get_specific_vacancy(Description: str = '', session: AsyncSession = Depends(get_async_session)):
-    query = select(vacancy).where((Description) in vacancy.c.Description)
+@router1.get("/"
+    #, dependencies=[Depends(check_user_role(["Admin", "Employer", "User"]))]
+             )
+async def get_specific_vacancy(id_vacancy: int = None, session: AsyncSession = Depends(get_async_session)):
+    if id_vacancy:
+        query = select(vacancy).where(vacancy.c.id_vacancy == id_vacancy)
+    else:
+        select(vacancy)
     result = await session.execute(query)
-    return result.all()
+    return result.mappings().all()
 
-@router1.post("/", dependencies=[Depends(check_user_role(["Admin", "Employer"]))])
+@router1.post("/"
+    #, dependencies=[Depends(check_user_role(["Admin", "Employer"]))]
+              )
 async def add_specific_vacancy(new_vacancy: vacancyCreate, session: AsyncSession = Depends(get_async_session)):
     stmt = insert(vacancy).values(**new_vacancy.dict())
     await session.execute(stmt)
     await session.commit()
     return {"status": "success"}
 
-@router1.delete("/", dependencies=[Depends(check_user_role(["Admin", "Employer"]))])
-async def delete_specific_vacancy(Description: str, session: AsyncSession = Depends(get_async_session)):
-    query = delete(vacancy).where(vacancy.c.Description == Description)
-    result = await session.execute(query)
-    return result.all()
+@router1.delete("/"
+    #, dependencies=[Depends(check_user_role(["Admin", "Employer"]))]
+                )
+async def delete_specific_vacancy(id_vacancy: int, session: AsyncSession = Depends(get_async_session)):
+    stmt = delete(vacancy).where(vacancy.c.id_vacancy == id_vacancy)
+    await session.execute(stmt)
+    await session.commit()
+    return {"status": "success"}
 
-@router1.put("/", dependencies=[Depends(check_user_role(["Admin", "Employer"]))])
+@router1.put("/"
+    #, dependencies=[Depends(check_user_role(["Admin", "Employer"]))]
+             )
 async def update_specific_vacancy(Description: str, new_vacacy: vacancyCreate, session: AsyncSession = Depends(get_async_session)):
     query = select(vacancy).where(vacancy.c.Description == Description)
     existing_vacancy = (await session.execute(query)).scalar_one_or_none()
@@ -56,26 +68,38 @@ router2 = APIRouter(
     tags=["appilicant"]
 )
 
-@router2.get("/", dependencies=[Depends(check_user_role(["Admin", "Employer"]))])
-async def get_specific_appilicant(email: str = '', session: AsyncSession = Depends(get_async_session)):
-    query = select(appilicant).where((email) in appilicant.c.email)
+@router2.get("/"
+    #, dependencies=[Depends(check_user_role(["Admin", "Employer"]))]
+             )
+async def get_specific_appilicant(id_appilicant: int = None, session: AsyncSession = Depends(get_async_session)):
+    if id_appilicant:
+        query = select(appilicant).where(appilicant.c.id_appilicant == id_appilicant)
+    else:
+        query = select(appilicant)
     result = await session.execute(query)
-    return result.all()
+    return result.mappings().all()
 
-@router2.post("/", dependencies=[Depends(check_user_role(["Admin", "Employer"]))])
+@router2.post("/"
+    #, dependencies=[Depends(check_user_role(["Admin", "Employer", "User"]))]
+              )
 async def add_specific_appilicant(new_appilicant: appilicantCreate, session: AsyncSession = Depends(get_async_session)):
     stmt = insert(appilicant).values(**new_appilicant.dict())
     await session.execute(stmt)
     await session.commit()
     return {"status": "success"}
 
-@router2.delete("/", dependencies=[Depends(check_user_role(["Admin", "Employer"]))])
-async def delete_specific_appilicant(email: str, session: AsyncSession = Depends(get_async_session)):
-    stmt = delete(appilicant).where(appilicant.c.email == email)
-    result = await session.execute(query)
-    return result.all()
+@router2.delete("/"
+    #, dependencies=[Depends(check_user_role(["Admin", "Employer"]))]
+                )
+async def delete_specific_appilicant(id_appilicant: int, session: AsyncSession = Depends(get_async_session)):
+    stmt = delete(appilicant).where(appilicant.c.id_appilicant == id_appilicant)
+    await session.execute(stmt)
+    await session.commit()
+    return {"status": "success"}
 
-@router2.put("/", dependencies=[Depends(check_user_role(["Admin", "Employer"]))])
+@router2.put("/"
+    #, dependencies=[Depends(check_user_role(["Admin", "Employer"]))]
+             )
 async def update_specific_appilicant(email: str, new_appilicant: appilicantCreate, session: AsyncSession = Depends(get_async_session)):
     query = select(appilicant).where(appilicant.c.email == email)
     existing_appilicant = (await session.execute(query)).scalar_one_or_none()

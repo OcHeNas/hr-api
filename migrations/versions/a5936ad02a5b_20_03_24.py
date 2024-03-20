@@ -1,8 +1,8 @@
-"""19.03.24
+"""20.03.24
 
-Revision ID: 043a0922a617
+Revision ID: a5936ad02a5b
 Revises: 
-Create Date: 2024-03-20 00:02:34.377067
+Create Date: 2024-03-20 17:03:10.242894
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '043a0922a617'
+revision: str = 'a5936ad02a5b'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -73,10 +73,10 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
-    sa.Column('id_satff', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('id', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('FIO', sa.VARCHAR(length=50), nullable=False),
     sa.Column('username', sa.VARCHAR(length=10), nullable=False),
-    sa.Column('hashed_password', sa.VARCHAR(length=10), nullable=False),
+    sa.Column('hashed_password', sa.String(), nullable=False),
     sa.Column('Passport', sa.TEXT(), nullable=False),
     sa.Column('INN', sa.VARCHAR(length=12), nullable=False),
     sa.Column('Birthday', sa.Date(), nullable=False),
@@ -93,7 +93,7 @@ def upgrade() -> None:
     sa.ForeignKeyConstraint(['department'], ['department.id_department'], ),
     sa.ForeignKeyConstraint(['order_id'], ['order.id_order'], ),
     sa.ForeignKeyConstraint(['role_id'], ['role.id'], ),
-    sa.PrimaryKeyConstraint('id_satff')
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 

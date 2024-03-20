@@ -19,10 +19,10 @@ role = Table(
 user = Table(
     "user",
     metadata,
-    Column("id_satff", Integer, primary_key=True, autoincrement=True),
+    Column("id", Integer, primary_key=True, autoincrement=True),
     Column("FIO", VARCHAR(50), nullable=False),
     Column("username", VARCHAR(10), nullable=False),
-    Column("hashed_password", VARCHAR(10), nullable=False),
+    Column("hashed_password", String, nullable=False),
     Column("Passport", TEXT, nullable=False),
     Column("INN", VARCHAR(12), nullable=False),
     Column("Birthday", Date, nullable=False),
@@ -39,7 +39,7 @@ user = Table(
 )
 
 class User(SQLAlchemyBaseUserTable[int], Base):
-    id_staff = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     email = Column(VARCHAR(50), nullable=False)
     FIO = Column(VARCHAR(50), nullable=False)
     Passport = Column(TEXT, nullable=False)
@@ -52,7 +52,7 @@ class User(SQLAlchemyBaseUserTable[int], Base):
     registered_at = Column(TIMESTAMP, default=datetime.utcnow)
     role_id = Column(Integer, ForeignKey(role.c.id))
     role_name = Column(VARCHAR(50), nullable=False)
-    hashed_password: Column(VARCHAR(10), nullable=False)
+    hashed_password: str = Column(String(length=1024), nullable=False)
     is_active: bool = Column(Boolean, default=True, nullable=False)
     is_superuser: bool = Column(Boolean, default=False, nullable=False)
     is_verified: bool = Column(Boolean, default=False, nullable=False)
