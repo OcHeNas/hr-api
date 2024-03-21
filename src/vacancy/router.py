@@ -23,7 +23,7 @@ async def get_specific_vacancy(id_vacancy: int = None, session: AsyncSession = D
     if id_vacancy:
         query = select(vacancy).where(vacancy.c.id_vacancy == id_vacancy)
     else:
-        select(vacancy)
+        query = select(vacancy)
     result = await session.execute(query)
     return result.mappings().all()
 

@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 
+
 from auth.base_config import auth_backend, fastapi_users
 from auth.schemas import UserRead, UserCreate, UserUpdate
 
 from vacancy.router import router1 as router_vacancy
 from vacancy.router import router2 as router_appilicant
+from department.router import router as all_users_router
 from department.router import router1 as router_department
 from department.router import router2 as post_router
 from department.router import router3 as order_router
@@ -31,6 +33,8 @@ app.include_router(
     tags=["users"],
 )
 
+
+app.include_router(all_users_router)
 app.include_router(router_vacancy)
 app.include_router(router_appilicant)
 app.include_router(router_department)

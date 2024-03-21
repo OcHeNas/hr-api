@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import select, insert, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.auth.models import user
 from src.database import get_async_session
 from src.department.models import department
 from src.department.models import order
@@ -11,11 +12,21 @@ from src.department.schemas import orderCreate
 from src.department.schemas import postCreate
 from src.auth.base_config import check_user_role
 
+router = APIRouter(
+    prefix="/All Users",
+    tags=["All Users"]
+)
+
+@router.get("/")
+async def get_all_users(session: AsyncSession = Depends(get_async_session)):
+    query = select(user)
+    result = await session.execute(query)
+    return result.mappings().all()
+
 router1 = APIRouter(
     prefix="/department",
     tags=["department"]
 )
-
 @router1.get("/"
              #, dependencies=[Depends(check_user_role(["Admin"]))]
              )
