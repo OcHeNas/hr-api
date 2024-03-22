@@ -13,7 +13,7 @@ from src.department.schemas import postCreate
 from src.auth.base_config import check_user_role
 
 router = APIRouter(
-    prefix="/All Users",
+    prefix="/allusers",
     tags=["All Users"]
 )
 
