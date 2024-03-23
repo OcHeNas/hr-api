@@ -2,15 +2,15 @@ from fastapi import APIRouter, Depends
 from sqlalchemy import select, insert, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.auth.models import user
-from src.database import get_async_session
-from src.department.models import department
-from src.department.models import order
-from src.department.models import post
-from src.department.schemas import departmentCreate
-from src.department.schemas import orderCreate
-from src.department.schemas import postCreate
-from src.auth.base_config import check_user_role
+from auth.models import user
+from database import get_async_session
+from department.models import department
+from department.models import order
+from department.models import post
+from department.schemas import departmentCreate
+from department.schemas import orderCreate
+from department.schemas import postCreate
+from auth.base_config import check_user_role
 
 router = APIRouter(
     prefix="/allusers",

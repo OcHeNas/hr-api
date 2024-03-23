@@ -4,7 +4,7 @@ from fastapi_users_db_sqlalchemy import SQLAlchemyBaseUserTable
 from sqlalchemy import Table, Column, Integer, String, TIMESTAMP, ForeignKey, JSON, Boolean, MetaData, VARCHAR, TEXT, Date, insert
 
 from database import Base
-from src.department.models import department, order, post
+from department.models import department, order, post
 
 metadata = MetaData()
 

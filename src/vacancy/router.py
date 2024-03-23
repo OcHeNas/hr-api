@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select, insert, delete, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.auth.models import User
-from  src.auth.base_config import current_user, fastapi_users
+from auth.models import User
+from auth.base_config import current_user, fastapi_users
 
-from src.database import get_async_session
-from src.vacancy.models import vacancy
-from src.vacancy.models import applicant
-from src.vacancy.schemas import vacancyCreate
-from src.vacancy.schemas import applicantCreate
-from src.auth.base_config import check_user_role
+from database import get_async_session
+from vacancy.models import vacancy
+from vacancy.models import applicant
+from vacancy.schemas import vacancyCreate
+from vacancy.schemas import applicantCreate
+from auth.base_config import check_user_role
 
 router1 = APIRouter(
     prefix="/vacancy",
