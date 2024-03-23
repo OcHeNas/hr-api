@@ -130,9 +130,9 @@ router3 = APIRouter(
 @router3.get("/"
     #, dependencies=[Depends(check_user_role(["Admin"]))]
              )
-async def get_specific_order(staff_id: int = None, session: AsyncSession = Depends(get_async_session)):
-    if staff_id:
-        query = select(order).where(order.c.staff_id == staff_id)
+async def get_specific_order(id_order: int = None, session: AsyncSession = Depends(get_async_session)):
+    if id_order:
+        query = select(order).where(order.c.id_order == id_order)
     else:
         query = select(order)
     result = await session.execute(query)
@@ -150,8 +150,8 @@ async def add_specific_order(new_order: orderCreate, session: AsyncSession = Dep
 @router3.delete("/"
                 #, dependencies=[Depends(check_user_role(["Admin"]))]
                 )
-async def delete_specific_order(staff_id: int, session: AsyncSession = Depends(get_async_session)):
-    stmt = delete(order).where(order.c.staff_id == staff_id)
+async def delete_specific_order(id_order: int, session: AsyncSession = Depends(get_async_session)):
+    stmt = delete(order).where(order.c.id_order == id_order)
     await session.execute(stmt)
     await session.commit()
     return {"status": "success"}
@@ -159,17 +159,17 @@ async def delete_specific_order(staff_id: int, session: AsyncSession = Depends(g
 @router3.put("/"
     #, dependencies=[Depends(check_user_role(["Admin"]))]
              )
-async def update_specific_order(staff_id: int, new_order: orderCreate, session: AsyncSession = Depends(get_async_session)):
-    query = select(order).where(order.c.staff_id == staff_id)
+async def update_specific_order(id_order: int, new_order: orderCreate, session: AsyncSession = Depends(get_async_session)):
+    query = select(order).where(order.c.id_order == id_order)
     existing_order = (await session.execute(query)).scalar_one_or_none()
     if existing_order:
         stmt = (
             update(order)
-            .where(order.c.staff_id == staff_id)
+            .where(order.c.id_order == id_order)
             .values(**new_order.dict())
         )
         await session.execute(stmt)
         await session.commit()
-        return {"status": "success", "message": f"order with id '{staff_id}' updated successfully"}
+        return {"status": "success", "message": f"order with id '{id_order}' updated successfully"}
     else:
-        return {"status": "error", "message": f"order with description '{staff_id}' not found"}
+        return {"status": "error", "message": f"order with description '{id_order}' not found"}
